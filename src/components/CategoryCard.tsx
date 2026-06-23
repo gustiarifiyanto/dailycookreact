@@ -3,8 +3,6 @@ import type { Category } from "../types/type";
 export default function CategoryCard({category}: CategoryCardProps) {
 
     const baseURL = "http://127.0.0.1:8000/storage";
-    console.log('baseURL:', baseURL);
-    console.log('icon:', category.icon);
 
     return(
     <div>

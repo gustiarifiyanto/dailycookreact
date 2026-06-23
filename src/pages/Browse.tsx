@@ -43,7 +43,7 @@ export default function Browse() {
     </form>
   </div>
   <CategoryWrapper/>
-  <section id="MadeByPeople">
+  <section id="MadeByDailyCook">
     <div className="flex items-center justify-between px-5">
       <h2 className="font-bold">Made by People</h2>
       <a

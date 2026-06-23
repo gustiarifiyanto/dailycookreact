@@ -33,7 +33,7 @@ export default function CategoryWrapper () {
     return(
         <section id="Categories" className="mt-[30px]">
             <div className="flex items-center justify-between px-5">
-                <h2 className="font-bold">By Categories</h2>
+                <h2 className="font-bold">Categories</h2>
             </div>
             <div className="swiper w-full mt-3">
             <Swiper

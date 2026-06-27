@@ -18,7 +18,7 @@ export default function RecipeCardResult({ recipe }: RecipeCardResultProps) {
             <h3 className="font-bold text-lg leading-[24px]">{recipe.name}</h3>
             <div className="flex shrink-0 items-center w-fit rounded-full py-1 px-2 bg-[#FF4C1C] shadow-[0_6px_10px_0_#FF4C1C80]">
               <img
-                src="assets/images/icons/Star 1.svg"
+                src="/assets/images/icons/Star 1.svg"
                 className="w-4 h-4"
                 alt="star"
               />

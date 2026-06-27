@@ -11,7 +11,7 @@ export default function BrowseFeaturedRecipesWrapper() {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/recipes")
+      .get(`http://127.0.0.1:8000/api/recipes`)
       .then((response) => {
         setRecipes(response.data.data);
         setLoading(false);
@@ -52,7 +52,7 @@ export default function BrowseFeaturedRecipesWrapper() {
         >
           {recipes.map((recipes) => (
             <SwiperSlide key={recipes.id} className="!w-fit">
-              <FeaturedRecipeCard recipe={recipes}/>
+              <FeaturedRecipeCard recipe={recipes} />
             </SwiperSlide>
           ))}
         </Swiper>

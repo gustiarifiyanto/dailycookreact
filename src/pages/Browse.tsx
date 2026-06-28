@@ -24,7 +24,7 @@ export default function Browse() {
         <a href="index.html" className="flex shrink-0">
           <img src="/assets/images/logos/logo.svg" alt="logo" />
         </a>
-        <a href="#">
+        {/* <a href="#">
           <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-[0_10px_20px_0_#D6D6D6AB] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FF4C1C80]">
             <img
               src="/assets/images/icons/notification.svg"
@@ -32,7 +32,7 @@ export default function Browse() {
               alt="icon"
             />
           </div>
-        </a>
+        </a> */}
       </nav>
       <div id="SearchForm" className="px-5 mt-[30px]">
         <div className="flex items-center rounded-full p-[5px_14px] pr-[5px] gap-[10px] bg-white shadow-[0_12px_30px_0_#D6D6D652] transition-all duration-300 focus-within:ring-1 focus-within:ring-[#FF4C1C]">
@@ -48,7 +48,7 @@ export default function Browse() {
             onChange={handleInputChange}
             id="search"
             className="appearance-none outline-none w-full font-semibold placeholder:font-normal placeholder:text-black"
-            placeholder="Find our best food recipes"
+            placeholder="Cari resep yang ingin anda coba"
           />
           <button
             onClick={handleSearch}
@@ -60,7 +60,7 @@ export default function Browse() {
       </div>
       <CategoryWrapper />
       <BrowseFeaturedRecipesWrapper></BrowseFeaturedRecipesWrapper>
-      <div
+      {/* <div
         id="BottomNav"
         className="fixed z-50 bottom-0 w-full max-w-[640px] mx-auto border-t border-[#E7E7E7] py-4 px-5 bg-white/70 backdrop-blur"
       >
@@ -106,7 +106,7 @@ export default function Browse() {
             </div>
           </a>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

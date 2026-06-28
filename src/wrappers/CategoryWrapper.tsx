@@ -12,7 +12,11 @@ export default function CategoryWrapper() {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/categories")
+      .get(`http://127.0.0.1:8000/api/categories`, {
+        headers: {
+          'X-API-KEY': '3i2rh23iorhofjwfo32of2',
+        }
+      })
       .then((response) => {
         setCategories(response.data.data);
         setLoading(false);
@@ -34,7 +38,7 @@ export default function CategoryWrapper() {
   return (
     <section id="Categories" className="mt-[30px]">
       <div className="flex items-center justify-between px-5">
-        <h2 className="font-bold">Categories</h2>
+        <h2 className="font-bold">Kategori</h2>
       </div>
       <div className="swiper w-full mt-3">
         <Swiper

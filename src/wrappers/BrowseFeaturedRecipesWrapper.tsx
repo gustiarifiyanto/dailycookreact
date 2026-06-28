@@ -3,6 +3,7 @@ import FeaturedRecipeCard from "../components/FeaturedRecipeCard";
 import type { Recipe } from "../types/type";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function BrowseFeaturedRecipesWrapper() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -11,7 +12,11 @@ export default function BrowseFeaturedRecipesWrapper() {
 
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:8000/api/recipes`)
+      .get("http://127.0.0.1:8000/api/recipes", {
+        headers: {
+          'X-API-KEY': '3i2rh23iorhofjwfo32of2',
+        }
+      })
       .then((response) => {
         setRecipes(response.data.data);
         setLoading(false);
@@ -33,13 +38,13 @@ export default function BrowseFeaturedRecipesWrapper() {
   return (
     <section id="MadeByDailyCook">
       <div className="flex items-center justify-between px-5">
-        <h2 className="font-bold">Made by DailyCook</h2>
-        <a
+        <h2 className="font-bold">Made by MyDailyDish</h2>
+        {/* <a
           href="#"
           className="font-semibold text-sm leading-[21px] text-[#FF4C1C]"
         >
           Explore All
-        </a>
+        </a> */}
       </div>
       <div className="swiper w-full mt-3">
         <Swiper
@@ -52,7 +57,9 @@ export default function BrowseFeaturedRecipesWrapper() {
         >
           {recipes.map((recipes) => (
             <SwiperSlide key={recipes.id} className="!w-fit">
-              <FeaturedRecipeCard recipe={recipes} />
+              <Link to={`/recipe/${recipes.slug}`}>
+                <FeaturedRecipeCard recipe={recipes} />
+              </Link>
             </SwiperSlide>
           ))}
         </Swiper>

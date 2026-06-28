@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import RecipeCardResult from "../components/RecipeCardResult";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -12,7 +12,11 @@ export default function CategoryLatestRecipesWrapper() {
 
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:8000/api/category/${slug}`)
+      .get(`http://127.0.0.1:8000/api/category/${slug}`, {
+        headers: {
+          'X-API-KEY': '3i2rh23iorhofjwfo32of2',
+        }
+      })
       .then((response) => {
         setCategory(response.data.data);
         setLoading(false);
@@ -43,10 +47,9 @@ export default function CategoryLatestRecipesWrapper() {
       <div className="flex flex-col gap-[18px] mt-[18px]">
         {Category.recipes.length > 0 ? (
           Category.recipes.map((recipes) => (
-            <RecipeCardResult
-              key={recipes.id}
-              recipe={recipes}
-            ></RecipeCardResult>
+            <Link to={`/recipe/${recipes.slug}`} key={recipes.id}>
+              <RecipeCardResult recipe={recipes}></RecipeCardResult>
+            </Link>
           ))
         ) : (
           <p>Belum ada data terkait</p>

@@ -13,7 +13,11 @@ export default function CategoryDetails() {
 
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:8000/api/category/${slug}`)
+      .get(`http://127.0.0.1:8000/api/category/${slug}`, {
+        headers: {
+          "X-API-KEY": "3i2rh23iorhofjwfo32of2",
+        },
+      })
       .then((response) => {
         setCategory(response.data.data);
         setLoading(false);
@@ -40,17 +44,16 @@ export default function CategoryDetails() {
   return (
     <>
       <nav className="absolute top-0 flex w-full max-w-[640px] items-center justify-between px-5 mt-[30px] z-20">
-        <Link to={'/'}>
+        <Link to={"/"}>
           <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white/20">
             <img
               src="/assets/images/icons/arrow-left.svg"
               className="w-5 h-5 object-contain"
               alt="icon"
             />
-            
           </div>
         </Link>
-        <h1 className="font-semibold text-white">Category</h1>
+        <h1 className="font-semibold text-white">Categories</h1>
         <button className="appearance-none">
           <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white/20">
             <img

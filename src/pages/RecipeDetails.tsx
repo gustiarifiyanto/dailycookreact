@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import IngredientCard from "../components/IngredientCard";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
+import type { Recipe } from "../types/type";
 
 export default function RecipeDetails() {
   const [activeTab, setActiveTab] = useState("ingredients");
@@ -9,10 +11,45 @@ export default function RecipeDetails() {
     setActiveTab(tab);
   };
 
+  const { slug } = useParams<{ slug: string }>();
+  const [recipe, setRecipe] = useState<Recipe | null>();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>();
+
+  useEffect(() => {
+    axios
+      .get(`http://127.0.0.1:8000/api/recipe/${slug}`, {
+        headers: {
+          'X-API-KEY': '3i2rh23iorhofjwfo32of2',
+        }
+      })
+      .then((response) => {
+        setRecipe(response.data.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+        setLoading(false);
+      });
+  }, [slug]);
+
+  if (loading) {
+    return <p>Loading....</p>;
+  }
+
+  if (error) {
+    return <p>Error Loading: {error}</p>;
+  }
+
+  if (!recipe) {
+    return <p>Recipe not found</p>;
+  }
+
+  const baseURL = "http://127.0.0.1:8000/storage/";
   return (
     <>
       <nav className="absolute top-0 flex w-full max-w-[640px] items-center justify-between px-5 mt-[30px] z-20">
-        <a href="index.html">
+        <Link to={"/"}>
           <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white/20">
             <img
               src="/assets/images/icons/arrow-left.svg"
@@ -20,7 +57,7 @@ export default function RecipeDetails() {
               alt="icon"
             />
           </div>
-        </a>
+        </Link>
         <button className="appearance-none">
           <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white/20">
             <img
@@ -46,32 +83,24 @@ export default function RecipeDetails() {
                 <div className="relative w-full h-full flex shrink-0">
                   <div className="gradient-filter absolute w-full h-full bg-[linear-gradient(180deg,rgba(0,0,0,0)40.47%,#000000_81.6%)] z-10" />
                   <img
-                    src="/assets/images/thumbnails/thumbnail-2.png"
+                    src={`${baseURL}/${recipe.thumbnail}`}
                     className="w-full h-full object-cover"
                     alt="thumbnail"
                   />
                 </div>
               </SwiperSlide>
-              <SwiperSlide>
-                <div className="relative w-full h-full flex shrink-0">
-                  <div className="gradient-filter absolute w-full h-full bg-[linear-gradient(180deg,rgba(0,0,0,0)40.47%,#000000_81.6%)] z-10" />
-                  <img
-                    src="/assets/images/thumbnails/thumbnail-1.png"
-                    className="w-full h-full object-cover"
-                    alt="thumbnail"
-                  />
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="relative w-full h-full flex shrink-0">
-                  <div className="gradient-filter absolute w-full h-full bg-[linear-gradient(180deg,rgba(0,0,0,0)40.47%,#000000_81.6%)] z-10" />
-                  <img
-                    src="/assets/images/thumbnails/thumbnail-3.png"
-                    className="w-full h-full object-cover"
-                    alt="thumbnail"
-                  />
-                </div>
-              </SwiperSlide>
+              {recipe.photos.map((photo) => (
+                <SwiperSlide key={photo.id}>
+                  <div className="relative w-full h-full flex shrink-0">
+                    <div className="gradient-filter absolute w-full h-full bg-[linear-gradient(180deg,rgba(0,0,0,0)40.47%,#000000_81.6%)] z-10" />
+                    <img
+                      src={`${baseURL}/${photo.photo}`}
+                      className="w-full h-full object-cover"
+                      alt="thumbnail"
+                    />
+                  </div>
+                </SwiperSlide>
+              ))}
             </Swiper>
           </div>
         </div>
@@ -80,9 +109,11 @@ export default function RecipeDetails() {
           <div className="swiper-pagination !-top-5 *:!bg-white" />
           <div className="flex justify-between p-5 pb-[23px] gap-3">
             <div className="flex flex-col gap-[6px]">
-              <p className="font-semibold text-[#FF4C1C]">Top Bakery</p>
+              <p className="font-semibold text-[#FF4C1C]">
+                {recipe.category.name}
+              </p>
               <h1 className="font-bold text-[34px] leading-[46px] text-white">
-                Burger Tebal Makin Hot
+                {recipe.name}
               </h1>
             </div>
             <div className="flex shrink-0 items-center w-fit h-fit rounded-full py-1 px-2 bg-white/20 backdrop-blur">
@@ -101,23 +132,19 @@ export default function RecipeDetails() {
       <section id="Description" className="flex flex-col gap-4 px-5 mt-[30px]">
         <div className="flex flex-col gap-2">
           <h2 className="font-bold">About</h2>
-          <p className="leading-8">
-            Burger tebal asal kota inkopad ini sangat membuat lapar dan sehat
-            untuk tubuh kita terutama ketika sedang bulking pada masa otot
-            terbaru setelah olahraga.
-          </p>
+          <p className="leading-8">{recipe.about}</p>
         </div>
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="flex shrink-0 w-[50px] h-[50px] rounded-full overflow-hidden">
               <img
-                src="/assets/images/photos/photo-1.png"
+                src={`${baseURL}/${recipe.author.photo}`}
                 className="w-full h-full object-cover"
                 alt="avatar"
               />
             </div>
             <div className="flex flex-col gap-[2px]">
-              <p className="font-semibold">Shayna</p>
+              <p className="font-semibold">{recipe.author.name}</p>
               <p className="text-sm leading-[21px] text-[#848486]">Author</p>
             </div>
           </div>
@@ -240,7 +267,28 @@ export default function RecipeDetails() {
               aria-labelledby="ingredients-tab"
             >
               <div className="grid grid-cols-2 gap-5">
-                <IngredientCard></IngredientCard>
+                {recipe.recipe_ingredients.map((recipeIngredients) => (
+                  <div
+                    key={recipeIngredients.id}
+                    className="flex flex-col items-center text-center w-full rounded-[20px] p-[14px] gap-[14px] bg-white shadow-[0_12px_30px_0_#D6D6D680]"
+                  >
+                    <div className="thumbnail flex shrink-0 w-full aspect-[138.5/100] rounded-[20px] bg-[#D9D9D9] overflow-hidden">
+                      <img
+                        src={`${baseURL}/${recipeIngredients.ingredient.photo}`}
+                        className="w-full h-full object-cover"
+                        alt="thumbnails"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-[2px]">
+                      <p className="font-semibold">
+                        {recipeIngredients.ingredient.name}
+                      </p>
+                      <p className="text-sm leading-[21px] text-[#848486]">
+                        1 kilogram
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -254,69 +302,25 @@ export default function RecipeDetails() {
             >
               <iframe
                 className="w-full aspect-video rounded-[20px] bg-[#D9D9D9]"
-                src="https://www.youtube.com/embed/n1YeqIlbkxc"
+                src={`https://www.youtube.com/embed/${recipe.url_video}`}
               />
               <div className="list-items-container flex flex-col mt-[26px]">
-                <div className="list flex gap-[14px]">
-                  <div className="flex relative">
-                    <div className="relative z-10 flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-white shadow-[0_12px_30px_0_#D6D6D680] font-bold text-sm leading-[21px]">
-                      <span>1</span>
+                {recipe.tutorials.length > 0 ? (
+                  recipe.tutorials.map((tutorial, index) => (
+                    <div key={tutorial.id} className="list flex gap-[14px]">
+                      <div className="flex relative">
+                        <div className="relative z-10 flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-white shadow-[0_12px_30px_0_#D6D6D680] font-bold text-sm leading-[21px]">
+                          <span>{index + 1}</span>
+                        </div>
+                        {/* the last .line will be hidden by CSS */}
+                        <div className="line absolute left-1/2 transform -translate-x-1/2 h-full border-dashed border border-[#DEDFEB]" />
+                      </div>
+                      <p className="leading-8 pb-[30px]">{tutorial.name}</p>
                     </div>
-                    {/* the last .line will be hidden by CSS */}
-                    <div className="line absolute left-1/2 transform -translate-x-1/2 h-full border-dashed border border-[#DEDFEB]" />
-                  </div>
-                  <p className="leading-8 pb-[30px]">
-                    Siapkan telur rebus dicampur dengan mentega rendah kalori
-                  </p>
-                </div>
-                <div className="list flex gap-[14px]">
-                  <div className="flex relative">
-                    <div className="relative z-10 flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-white shadow-[0_12px_30px_0_#D6D6D680] font-bold text-sm leading-[21px]">
-                      <span>2</span>
-                    </div>
-                    <div className="line absolute left-1/2 transform -translate-x-1/2 h-full border-dashed border border-[#DEDFEB]" />
-                  </div>
-                  <p className="leading-8 pb-[30px]">
-                    Panaskan minyak dengan api stabil agar tidak gosong nanti
-                    dagingnya
-                  </p>
-                </div>
-                <div className="list flex gap-[14px]">
-                  <div className="flex relative">
-                    <div className="relative z-10 flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-white shadow-[0_12px_30px_0_#D6D6D680] font-bold text-sm leading-[21px]">
-                      <span>3</span>
-                    </div>
-                    <div className="line absolute left-1/2 transform -translate-x-1/2 h-full border-dashed border border-[#DEDFEB]" />
-                  </div>
-                  <p className="leading-8 pb-[30px]">
-                    Roti disajikan tanpa wijen agar rasanya tidak bertabrakan
-                    salada
-                  </p>
-                </div>
-                <div className="list flex gap-[14px]">
-                  <div className="flex relative">
-                    <div className="relative z-10 flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-white shadow-[0_12px_30px_0_#D6D6D680] font-bold text-sm leading-[21px]">
-                      <span>4</span>
-                    </div>
-                    <div className="line absolute left-1/2 transform -translate-x-1/2 h-full border-dashed border border-[#DEDFEB]" />
-                  </div>
-                  <p className="leading-8 pb-[30px]">
-                    Grill daging sapi dengan keadaan frozen dan berikan sea
-                    salts
-                  </p>
-                </div>
-                <div className="list flex gap-[14px]">
-                  <div className="flex relative">
-                    <div className="relative z-10 flex shrink-0 items-center justify-center w-10 h-10 rounded-full bg-white shadow-[0_12px_30px_0_#D6D6D680] font-bold text-sm leading-[21px]">
-                      <span>5</span>
-                    </div>
-                    <div className="line absolute left-1/2 transform -translate-x-1/2 h-full border-dashed border border-[#DEDFEB]" />
-                  </div>
-                  <p className="leading-8 pb-[30px]">
-                    Gabungkan satu per satu ketika masih panas jadi lebih
-                    melekat
-                  </p>
-                </div>
+                  ))
+                ) : (
+                  <p>Belum ada tutorial</p>
+                )}
               </div>
             </div>
           )}
@@ -497,9 +501,13 @@ export default function RecipeDetails() {
             />
             <p>Offline-access is available now</p>
           </div>
-          <button className="py-3 px-5 rounded-full font-semibold text-white text-nowrap transition-all duration-300 shadow-[0_10px_20px_0_#FF4C1C80] bg-[#FF4C1C]">
+          <a
+            target="_blank"
+            href={`${baseURL}/${recipe.url_file}`}
+            className="py-3 px-5 rounded-full font-semibold text-white text-nowrap transition-all duration-300 shadow-[0_10px_20px_0_#FF4C1C80] bg-[#FF4C1C]"
+          >
             Download Now
-          </button>
+          </a>
         </div>
       </div>
     </>

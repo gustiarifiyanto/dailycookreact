@@ -6,10 +6,16 @@ export interface Recipe {
     url_video:string,
     author:Author,
     category:Category,
+    photos:Photo[],
     thumbnail: string,
     tutorials: Tutorial[],
     recipe_ingredients: RecipeIngredient[],
     about: string,
+}
+
+interface Photo {
+    id: number,
+    photo: string,
 }
 
 interface Tutorial {

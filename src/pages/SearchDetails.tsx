@@ -31,6 +31,11 @@ export default function SearchDetails() {
     try {
       const response = await axios.get(
         `http://127.0.0.1:8000/api/recipes/search?query=${query}`,
+        {
+          headers: {
+            'X-API-KEY': '3i2rh23iorhofjwfo32of2',
+          }
+        }
       );
       setSearchResults(response.data.data);
     } catch (error) {
@@ -50,19 +55,17 @@ export default function SearchDetails() {
     <>
       <nav className="flex items-center justify-between px-5 mt-[30px]">
         <Link to={"/"}>
-          <a className="flex shrink-0">
+          <div className="flex shrink-0">
             <img src="assets/images/logos/logo.svg" alt="logo" />
-          </a>
-        </Link>
-        <a href="#">
-          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-[0_10px_20px_0_#D6D6D6AB] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FF4C1C80]">
-            <img
-              src="assets/images/icons/notification.svg"
-              className="w-5 h-5 object-contain"
-              alt="icon"
-            />
           </div>
-        </a>
+        </Link>
+        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-[0_10px_20px_0_#D6D6D6AB] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FF4C1C80]">
+          <img
+            src="assets/images/icons/notification.svg"
+            className="w-5 h-5 object-contain"
+            alt="icon"
+          />
+        </div>
       </nav>
       <div className="px-5 mt-[30px]">
         {loading && <p>Loading.....</p>}
@@ -94,10 +97,9 @@ export default function SearchDetails() {
         <div className="flex flex-col gap-[18px] mt-[18px]">
           {searchResults.length > 0 ? (
             searchResults.map((recipe) => (
-              <RecipeCardResult
-                key={recipe.id}
-                recipe={recipe}
-              ></RecipeCardResult>
+              <Link key={recipe.id} to={`/recipe/${recipe.slug}`}>
+                <RecipeCardResult recipe={recipe}></RecipeCardResult>
+              </Link>
             ))
           ) : (
             <p>Belum ada recipe</p>

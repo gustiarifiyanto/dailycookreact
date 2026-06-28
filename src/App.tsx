@@ -3,6 +3,7 @@ import Browse from './pages/Browse';
 import SearchDetails from './pages/SearchDetails';
 // import RecipeDetails from './pages/ReipeDetails';
 import CategoryDetails from './pages/CategoryDetails';
+import RecipeDetails from './pages/RecipeDetails';
 // import SearchDetails from './pages/SearchDetails';
 function App() {
 
@@ -11,7 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Browse />} />
         <Route path="/search" element={<SearchDetails />} />
-        {/* <Route path="/recipe/:slug" element={<RecipeDetails />} /> */}
+        <Route path="/recipe/:slug" element={<RecipeDetails />} />
         <Route path="/category/:slug" element={<CategoryDetails />} />
       </Routes>
     </Router>
